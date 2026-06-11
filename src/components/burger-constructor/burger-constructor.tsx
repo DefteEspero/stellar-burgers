@@ -1,7 +1,7 @@
 import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../services/store';
 import {
   clearConstructor,
@@ -25,6 +25,7 @@ export const BurgerConstructor: FC = () => {
   const orderRequest = useSelector(selectOrderLoading);
   const orderModalData = useSelector(selectOrder);
   const user = useSelector(selectUser);
+  const location = useLocation();
 
   const constructorItems = useMemo(
     () => ({
@@ -38,7 +39,7 @@ export const BurgerConstructor: FC = () => {
     if (!bun || orderRequest) return;
 
     if (!user) {
-      navigate('/login', { replace: true });
+      navigate('/login', { replace: true, state: { from: location } });
       return;
     }
 

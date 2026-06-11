@@ -9,7 +9,9 @@ import {
   registerUserApi,
   updateUserApi,
   TLoginData,
-  TRegisterData
+  TRegisterData,
+  forgotPasswordApi,
+  resetPasswordApi
 } from '@api';
 
 type UserState = {
@@ -41,10 +43,16 @@ const clearTokens = () => {
 export const checkingUserAuth = createAsyncThunk(
   'user/checkingUserAuth',
   async (_, { rejectWithValue }) => {
+    if (!localStorage.getItem('refreshToken')) {
+      clearTokens();
+      return rejectWithValue('Токен авторизации отсутствует');
+    }
+
     try {
       const response = await getUserApi();
       return response.user;
     } catch (error) {
+      clearTokens();
       return rejectWithValue(error);
     }
   }
@@ -77,24 +85,50 @@ export const updateUser = createAsyncThunk(
 );
 
 export const logoutUser = createAsyncThunk('user/logoutUser', async () => {
-  await logoutApi();
-  clearTokens();
+  try {
+    await logoutApi();
+  } finally {
+    clearTokens();
+  }
 });
+
+export const forgotPassword = createAsyncThunk(
+  'user/forgotPassword',
+  async (email: string) => {
+    await forgotPasswordApi({ email });
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  'user/resetPassword',
+  async (data: { password: string; token: string }) => {
+    await resetPasswordApi(data);
+  }
+);
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    clearUserError: (state) => {
+      state.error = null;
+    }
+  },
   extraReducers: (builder) => {
     builder
+      .addCase(checkingUserAuth.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(checkingUserAuth.fulfilled, (state, action) => {
         state.user = action.payload;
         state.isAuthChecked = true;
+        state.isLoading = false;
       })
       .addCase(checkingUserAuth.rejected, (state) => {
         state.user = null;
+        state.isLoading = false;
         state.isAuthChecked = true;
-        clearTokens();
       })
 
       .addCase(loginUser.pending, (state) => {
@@ -136,15 +170,28 @@ const userSlice = createSlice({
           action.error.message || 'Ошибка обновления данных пользователя.';
       })
 
+      .addCase(logoutUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
         state.isAuthChecked = true;
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isAuthChecked = true;
+        state.user = null;
+        state.error = action.error.message || 'Ошибка выхода из аккаунта';
       });
   }
 });
 
 export const selectUser = (state: RootState) => state.user.user;
 export const selectUserError = (state: RootState) => state.user.error;
+export const { clearUserError } = userSlice.actions;
 
 export const selectIsAuthChecked = (state: RootState) =>
   state.user.isAuthChecked;

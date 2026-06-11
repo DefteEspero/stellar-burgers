@@ -1,6 +1,6 @@
 import { FC, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { IngredientDetailsUI } from '@ui';
+import { IngredientDetailsUI, Preloader } from '@ui';
 import { useSelector } from '../../services/store';
 import { selectIngredients } from '../../services/slices/ingredientsSlice';
 import { TIngredient } from '@utils-types';
@@ -15,7 +15,7 @@ export const IngredientDetails: FC = () => {
   );
 
   if (!ingredientData) {
-    return null;
+    return <Preloader />;
   }
 
   return <IngredientDetailsUI ingredientData={ingredientData} />;

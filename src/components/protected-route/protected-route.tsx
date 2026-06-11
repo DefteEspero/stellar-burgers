@@ -8,11 +8,11 @@ import {
 
 type ProtectedRouteProps = {
   children: React.ReactElement;
-  isAuthed?: boolean;
+  onlyUnAuth?: boolean;
 };
 
 export const ProtectedRoute = ({
-  isAuthed = false,
+  onlyUnAuth = false,
   children
 }: ProtectedRouteProps) => {
   const user = useSelector(selectUser);
@@ -23,7 +23,7 @@ export const ProtectedRoute = ({
     return <Preloader />;
   }
 
-  if (isAuthed && user) {
+  if (onlyUnAuth && user) {
     const from = location.state?.from || {
       pathname: '/'
     };
@@ -31,7 +31,7 @@ export const ProtectedRoute = ({
     return <Navigate to={from} replace />;
   }
 
-  if (!isAuthed && !user) {
+  if (!onlyUnAuth && !user) {
     return <Navigate to='/login' state={{ from: location }} replace />;
   }
 

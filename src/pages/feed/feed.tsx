@@ -18,10 +18,10 @@ export const Feed: FC = () => {
   };
 
   useEffect(() => {
-    handleGetFeeds();
+    dispatch(getFeeds());
   }, [dispatch]);
 
-  if (!isLoading && !orders.length) {
+  if (isLoading) {
     return <Preloader />;
   }
 

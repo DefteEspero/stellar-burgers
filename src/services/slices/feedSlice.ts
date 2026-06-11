@@ -6,7 +6,7 @@ import { getFeedsApi, getOrdersApi } from '@api';
 type FeedState = {
   orders: TOrder[];
   total: number;
-  todayTotal: number;
+  totalToday: number;
   profileOrders: TOrder[];
   isLoading: boolean;
   error: string | null;
@@ -15,7 +15,7 @@ type FeedState = {
 const initialState: FeedState = {
   orders: [],
   total: 0,
-  todayTotal: 0,
+  totalToday: 0,
   profileOrders: [],
   isLoading: false,
   error: null
@@ -42,15 +42,25 @@ const feedSlice = createSlice({
         state.isLoading = false;
         state.orders = action.payload.orders;
         state.total = action.payload.total;
-        state.todayTotal = action.payload.totalToday;
+        state.totalToday = action.payload.totalToday;
       })
       .addCase(getFeeds.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка загрузки летны заказов';
+        state.error = action.error.message || 'Ошибка загрузки ленты заказов.';
       })
 
+      .addCase(getProfileOrders.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(getProfileOrders.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.profileOrders = action.payload;
+      })
+      .addCase(getProfileOrders.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error =
+          action.error.message || 'Ошибка загрузки истории заказов.';
       });
   }
 });

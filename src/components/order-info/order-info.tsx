@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { OrderInfoUI } from '@ui';
+import { OrderInfoUI, Preloader } from '@ui';
 import { TIngredient } from '@utils-types';
 import { useDispatch, useSelector } from '../../services/store';
 import {
@@ -35,11 +35,14 @@ export const OrderInfo: FC = () => {
     if (!orderData && Number.isFinite(orderNumber)) {
       dispatch(getOrderByNumber(orderNumber));
     }
+  }, [dispatch, orderNumber, orderData]);
 
-    return () => {
+  useEffect(
+    () => () => {
       dispatch(clearOrderByNumber());
-    };
-  }, [dispatch, orderData, orderNumber]);
+    },
+    [dispatch]
+  );
 
   const orderInfo = useMemo(() => {
     if (!orderData) return null;
@@ -79,7 +82,7 @@ export const OrderInfo: FC = () => {
   }, [orderData, ingredients]);
 
   if (!orderInfo) {
-    return null;
+    return <Preloader />;
   }
 
   return <OrderInfoUI orderInfo={orderInfo} />;

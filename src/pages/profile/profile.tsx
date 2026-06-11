@@ -33,6 +33,29 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+
+    const dataToUpdate: {
+      name: string;
+      email: string;
+      password?: string;
+    } = {
+      name: formValue.name,
+      email: formValue.email
+    };
+
+    if (formValue.password) {
+      dataToUpdate.password = formValue.password;
+    }
+
+    dispatch(updateUser(dataToUpdate))
+      .unwrap()
+      .then(() => {
+        setFormValue((prevState) => ({
+          ...prevState,
+          password: ''
+        }));
+      })
+      .catch(() => undefined);
   };
 
   const handleCancel = (e: SyntheticEvent) => {
@@ -61,6 +84,4 @@ export const Profile: FC = () => {
       handleInputChange={handleInputChange}
     />
   );
-
-  return null;
 };
