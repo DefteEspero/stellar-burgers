@@ -9,7 +9,7 @@ import { TOrder } from '@utils-types';
 const newOrder = {
   _id: 'order-id',
   status: 'done',
-  name: 'Тестовый бургер',
+  name: 'testBurger',
   owner: {
     name: 'testName',
     email: 'test@example.com',
@@ -24,7 +24,7 @@ const newOrder = {
 
 const order: TOrder = {
   _id: 'order-id',
-  name: 'Тестовый заказ',
+  name: 'testOrder',
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
   status: 'done',

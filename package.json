@@ -94,9 +94,10 @@
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier ./src --write",
     "start:test": "webpack serve --mode=development --no-open",
-    "test": "jest",
+    "test": "npm run test:playwright && npm run test:jest",
     "test:jest": "jest",
-    "test:playwright": "playwright test"
+    "test:playwright": "playwright test",
+    "coverage": "jest --coverage"
   },
   "eslintConfig": {
     "extends": [

@@ -3,7 +3,7 @@ import { TIngredient } from '../../../utils/types';
 
 const bun: TIngredient = {
   _id: 'bun-id',
-  name: 'Тестовая булка.',
+  name: 'testBun',
   type: 'bun',
   proteins: 10,
   fat: 20,

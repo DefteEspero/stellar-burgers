@@ -4,7 +4,7 @@ import { TOrder } from '@utils-types';
 const order: TOrder = {
   _id: 'order-id',
   status: 'done',
-  name: 'Тестовый заказ',
+  name: 'testOrder',
   number: 12345,
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',

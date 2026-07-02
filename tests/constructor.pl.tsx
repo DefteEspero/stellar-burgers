@@ -123,6 +123,7 @@ test.describe('Создание заказа', () => {
 
   test.afterEach(async ({ page, context }) => {
     await context.clearCookies();
+    await page.evaluate(() => window.localStorage.removeItem('refreshToken'));
   });
 
   test('Сборка бургера, оформление заказа и очистка конструктора', async ({

@@ -8,7 +8,7 @@ import { TConstructorIngredient, TIngredient } from '@utils-types';
 
 const bun: TIngredient = {
   _id: 'bun-id',
-  name: 'Тестовая булка',
+  name: 'testBun',
   type: 'bun',
   proteins: 10,
   fat: 20,
@@ -22,7 +22,7 @@ const bun: TIngredient = {
 
 const main: TIngredient = {
   _id: 'main-id',
-  name: 'Тестовая начинка',
+  name: 'testMain',
   type: 'main',
   fat: 21,
   proteins: 11,
@@ -36,7 +36,7 @@ const main: TIngredient = {
 
 const sauce: TIngredient = {
   _id: 'sauce-id',
-  name: 'Тестовый соус',
+  name: 'testSauce',
   type: 'sauce',
   fat: 22,
   price: 300,
@@ -48,7 +48,7 @@ const sauce: TIngredient = {
   image_mobile: 'sauce-mobile.png'
 };
 
-const mainConstructocr: TConstructorIngredient = {
+const mainConstructor: TConstructorIngredient = {
   ...main,
   id: 'main-constructor-id'
 };
@@ -81,9 +81,9 @@ describe('burgerConstructor reducer', () => {
     const state = constructorReducer(
       {
         bun,
-        ingredients: [mainConstructocr, sauceConstructor]
+        ingredients: [mainConstructor, sauceConstructor]
       },
-      removeIngredient(mainConstructocr.id)
+      removeIngredient(mainConstructor.id)
     );
 
     expect(state.ingredients).toEqual([sauceConstructor]);
@@ -93,17 +93,17 @@ describe('burgerConstructor reducer', () => {
     const state = constructorReducer(
       {
         bun,
-        ingredients: [mainConstructocr, sauceConstructor]
+        ingredients: [mainConstructor, sauceConstructor]
       },
       moveIngredient({ fromIndex: 0, toIndex: 1 })
     );
 
-    expect(state.ingredients).toEqual([sauceConstructor, mainConstructocr]);
+    expect(state.ingredients).toEqual([sauceConstructor, mainConstructor]);
   });
 
   test('Очистка корзины.', () => {
     const state = constructorReducer(
-      { bun, ingredients: [mainConstructocr] },
+      { bun, ingredients: [mainConstructor] },
       clearConstructor()
     );
 
